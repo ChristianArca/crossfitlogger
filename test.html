@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<script src="https://cdn.firebase.com/v0/firebase.js">
+		</script>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+	</head>
+	<body>
+		<h1>CrossFit Logger</h1>
+		<h2>Navigation</h2>
+		<ul>
+			<a href="movements.html"><li>View All Movements</li></a>
+		</ul>
+		<h2>Add a Movement</h2>
+		<form>
+			<input type="text" id="movementInput" placeholder="Movement name">
+			<button type="submit" class="submit">Submit</button>
+		</form>
+		<script type="text/javascript">
+			console.log("In Javascript");
+			var url  = "https://christianarca.firebaseio.com/movement_list";
+			var myDataRef = new Firebase(url);
+
+			function eventManager(event) {
+				console.log("In event manager");
+				var movement = $('#movementInput').val();
+				var date = Date();
+				var onComplete = function(error) {
+					if (error) {
+						alert("Data not saved" + error);
+					} else {
+						alert("Data saved");
+					}
+				};
+				myDataRef.push({movement: movement, date: date}, onComplete);
+				console.log("The movement is:"+movement);
+			};
+			var submit = document.getElementsByTagName('button')[0];
+			submit.onclick = eventManager;
+		</script>
+	</body>
+</html>
