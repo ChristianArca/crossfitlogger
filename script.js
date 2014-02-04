@@ -1,9 +1,9 @@
 
 var url = "https://christianarca.firebaseio.com/";
 var myDataRef = new Firebase(url);
-var movementsRef  = url+"movements";
+var movementsRef  = new Firebase(url+"movements");
 
-function eventManager(event) {
+function eventManager(evt) {
 	var movement = $('#movementInput').val();
 	var date = Date();
 	
@@ -11,5 +11,12 @@ function eventManager(event) {
 	event.preventDefault();
 }
 
-var submit = document.getElementsByTagName('button')[0];
-submit.onclick = eventManager;
+movementsRef.on('child_added', function(snapshot){
+	var movementData = snapshot.val();
+	console.log("Movement:" + movementData.name + " Created:" + movementData.created);
+});
+
+window.onload=function() {
+	var submit = document.getElementById("movementSubmit");
+	submit.onclick = eventManager;
+}
