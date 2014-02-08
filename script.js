@@ -1,38 +1,45 @@
 
 var url = "https://christianarca.firebaseio.com/";
 var myDataRef = new Firebase(url);
-var movementsRef  = new Firebase(url+"movements");
+var movementsRef  = new Firebase(url+"movement");
 
 function createNewMovement( movementRecord, movementDate ) {
    console.log("In createNewMovement");
-   var id = fb.child('user').push(movementRecord).name();
+   var id = myDataRef.child('movement').push(movementRecord).name();
    console.log("Movement ID:" + id);
    myDataRef.child('movements_to_ids/'+movementRecord.movementName).set(id);
    return id;
 }
 
+function getMovementIdByName( movementName, callback ) {
+   myDataRef.child('movements_to_ids/'+movementName).once('value', function(snap) {
+       callback( snap.val() );
+   });
+}
 
 function eventManager(evt) {
-	var movementName = $('#movementInput').val();
-	var createDate = Date();
-	
-	movementsRef.push({movementName: movementName, created: createDate});
-	event.preventDefault();
+	var evtInput = {
+		movementName: $('#movementInput').val(),
+		created: Date()
+	}
+	createNewMovement(evtInput);
+	evt.preventDefault();
 	$("movementInput").val('');
 }
 
-movementsRef.on('child_added', function(snapshot){
-	var movementData = snapshot.val();	
-	//$('#movements').append("<li>" + movementData.movementName + "</li>");
-});
+function getMovements(){
+	movementsRef.on('child_added', function(snap){
+		var movementData = snap.val();
+		$('#movements').append("<li>" + movementData.movementName + " " + movementData.created + "</li>");
+	});
+}
 
 window.onload = function() {
-	movementsRef.on('value', function(snap){
-		var movementData = snap.val();
-		for (var key in movementData) {
-			$('#movements').append("<li>" + movementData[key].movementName + " " + movementData[key].created + "</li>");
-		}
-	});
+	getMovements();
 	var submit = document.getElementById("movementSubmit");
 	submit.onclick = eventManager;
 }
+
+var movementID = getMovementIdByName("Burpees", function(callback) {
+	console.log(callback);
+});
