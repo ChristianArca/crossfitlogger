@@ -4,19 +4,26 @@ var myDataRef = new Firebase(url);
 var movementsRef  = new Firebase(url+"movements");
 
 function eventManager(evt) {
-	var movement = $('#movementInput').val();
-	var date = Date();
+	var movementName = $('#movementInput').val();
+	var createDate = Date();
 	
-	movementsRef.push({name: movement, created: date});
+	movementsRef.push({movementName: movementName, created: createDate});
 	event.preventDefault();
+	$("movementInput").val('');
 }
 
 movementsRef.on('child_added', function(snapshot){
-	var movementData = snapshot.val();
-	console.log("Movement:" + movementData.name + " Created:" + movementData.created);
+	var movementData = snapshot.val();	
+	//$('#movements').append("<li>" + movementData.movementName + "</li>");
 });
 
-window.onload=function() {
+window.onload = function() {
+	movementsRef.on('value', function(snap){
+		var movementData = snap.val();
+		for (var key in movementData) {
+			$('#movements').append("<li>" + movementData[key].movementName + " " + movementData[key].created + "</li>");
+		}
+	});
 	var submit = document.getElementById("movementSubmit");
 	submit.onclick = eventManager;
 }
