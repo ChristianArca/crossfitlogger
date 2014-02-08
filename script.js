@@ -3,6 +3,15 @@ var url = "https://christianarca.firebaseio.com/";
 var myDataRef = new Firebase(url);
 var movementsRef  = new Firebase(url+"movements");
 
+function createNewMovement( movementRecord, movementDate ) {
+   console.log("In createNewMovement");
+   var id = fb.child('user').push(movementRecord).name();
+   console.log("Movement ID:" + id);
+   myDataRef.child('movements_to_ids/'+movementRecord.movementName).set(id);
+   return id;
+}
+
+
 function eventManager(evt) {
 	var movementName = $('#movementInput').val();
 	var createDate = Date();
