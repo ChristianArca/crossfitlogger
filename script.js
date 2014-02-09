@@ -44,4 +44,4 @@ var movementID = getMovementIdByName("Burpees", function(callback) {
 	console.log(callback);
 });
 
-//testing hooks
+//testing zbot hooks now
