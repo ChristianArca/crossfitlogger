@@ -40,8 +40,14 @@ window.onload = function() {
 	submit.onclick = eventManager;
 }
 
-var movementID = getMovementIdByName("Burpees", function(callback) {
-	console.log(callback);
-});
-
-//testing zbot hooks now
+function checkIfMovementExists(movement) {
+	var exists = getMovementIdByName(movement, function(callback) {
+		if (callback == null){
+			console.log("Nothing here");
+		}
+		else {
+			console.log(callback);
+		}
+		//console.log(callback);
+	});
+}
